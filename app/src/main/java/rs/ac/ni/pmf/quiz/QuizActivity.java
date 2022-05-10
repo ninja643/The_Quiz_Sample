@@ -4,6 +4,7 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +12,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -22,8 +21,9 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Locale;
 
-import rs.ac.ni.pmf.quiz.model.Question;
-import rs.ac.ni.pmf.quiz.model.QuestionsRepository;
+import rs.ac.ni.pmf.quiz.db.model.Question;
+import rs.ac.ni.pmf.quiz.db.QuestionsRepository;
+import rs.ac.ni.pmf.quiz.viewmodel.QuizViewModel;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -36,6 +36,8 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final long BACK_BUTTON_ACCEPT_DELAY = 2000;
     private static final long COUNT_DOWN_INTERVAL = 15000;
+
+    private QuizViewModel _quizViewModel;
 
     private List<Question> _questions;
 
@@ -89,6 +91,8 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        _quizViewModel = new ViewModelProvider(this).get(QuizViewModel.class);
+
         _answered = false;
 
         _confirmButton = findViewById(R.id.button_confirm_next);
@@ -117,7 +121,8 @@ public class QuizActivity extends AppCompatActivity {
         _defaultRadioButtonColor = _radioButton1.getTextColors();
         _defaultCounterTextColor = _textCountDown.getTextColors();
 
-        _questions = QuestionsRepository.findAll();
+        final QuestionsRepository questionsRepository = new QuestionsRepository(this);
+        _questions = questionsRepository.getQuestionsByCategories(_quizViewModel.getSelectedCategories(), 5);
         _currentQuestionIndex = -1;
 
         _millisLeft = COUNT_DOWN_INTERVAL;
@@ -143,8 +148,7 @@ public class QuizActivity extends AppCompatActivity {
 
         final int userAnswer = _radioGroup.indexOfChild(findViewById(_radioGroup.getCheckedRadioButtonId())) + 1;
 
-        if (userAnswer == _currentQuestion.getAnswer())
-        {
+        if (userAnswer == _currentQuestion.getAnswer()) {
             _score++;
             updateScore();
         }
@@ -217,8 +221,8 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void updateCountDown(long millisLeft) {
-        int minutes = (int)(millisLeft / 1000) / 60;
-        int seconds = (int)(millisLeft / 1000) % 60;
+        int minutes = (int) (millisLeft / 1000) / 60;
+        int seconds = (int) (millisLeft / 1000) % 60;
 
         _textCountDown.setText(String.format(Locale.ROOT, "%02d:%02d", minutes, seconds));
 
@@ -238,8 +242,7 @@ public class QuizActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (System.currentTimeMillis() - _backButtonClickedMillis < BACK_BUTTON_ACCEPT_DELAY)
-        {
+        if (System.currentTimeMillis() - _backButtonClickedMillis < BACK_BUTTON_ACCEPT_DELAY) {
             finishQuiz();
         } else {
             Toast.makeText(this, R.string.back_pressed_warning, Toast.LENGTH_SHORT).show();

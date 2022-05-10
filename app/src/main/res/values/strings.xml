@@ -10,4 +10,11 @@
     <string name="finish_quiz">Finish</string>
     <string name="select_answer_warning">Please select an answer</string>
     <string name="back_pressed_warning">Press Back again to exit</string>
+    <string name="add_new_category">Add new category</string>
+    <string name="manage_questions">Manage questions</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

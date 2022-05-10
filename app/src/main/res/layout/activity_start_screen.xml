@@ -39,6 +39,15 @@
 
         />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categories_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:choiceMode="multipleChoice"
+        app:layout_constraintBottom_toTopOf="@id/button_start_quiz"
+        app:layout_constraintTop_toBottomOf="@id/horizontal_guide" />
+
     <Button
         android:id="@+id/button_start_quiz"
         android:layout_width="match_parent"
