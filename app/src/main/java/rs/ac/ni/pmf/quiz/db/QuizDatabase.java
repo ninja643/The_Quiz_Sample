@@ -6,6 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -54,7 +56,7 @@ public abstract class QuizDatabase extends RoomDatabase {
         _databaseExecutor.execute(task);
     }
 
-    public <T> ListenableFuture<T> schedule(Callable<T> task) {
-        return _listeningExecutorService.submit(task);
+    public <T> void submit(Callable<T> task, FutureCallback<T> callback) {
+        Futures.addCallback(_listeningExecutorService.submit(task), callback, _listeningExecutorService);
     }
 }

@@ -16,12 +16,18 @@ public class AddCategoryDialog extends DialogFragment {
         void onAddCategory(String category);
     }
 
-    private AddCategoryDialogListener addCategoryDialogListener;
+    private AddCategoryDialogListener _addCategoryDialogListener;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        addCategoryDialogListener = (AddCategoryDialogListener) context;
+        _addCategoryDialogListener = (AddCategoryDialogListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        _addCategoryDialogListener = null;
     }
 
     @NonNull
@@ -37,7 +43,7 @@ public class AddCategoryDialog extends DialogFragment {
                 .setView(input)
                 .setPositiveButton(
                         R.string.ok,
-                        (dialog, which) -> addCategoryDialogListener.onAddCategory(input.getText().toString()))
+                        (dialog, which) -> _addCategoryDialogListener.onAddCategory(input.getText().toString()))
                 .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
                 .create();
     }

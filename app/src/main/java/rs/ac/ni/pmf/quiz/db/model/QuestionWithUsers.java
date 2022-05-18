@@ -11,9 +11,13 @@ public class QuestionWithUsers {
     public Question question;
 
     @Relation(
+            entity = User.class,
             parentColumn = "id",
             entityColumn = "id",
-            associateBy = @Junction(UserQuestionCrossRef.class)
+            associateBy = @Junction(
+                    value = UserQuestionCrossRef.class,
+                    parentColumn = "question_id",
+                    entityColumn = "user_id")
     )
     public List<User> users;
 }

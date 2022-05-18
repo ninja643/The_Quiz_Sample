@@ -3,6 +3,7 @@ package rs.ac.ni.pmf.quiz.viewmodel;
 import android.app.Application;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -20,10 +21,10 @@ import rs.ac.ni.pmf.quiz.db.CategoriesRepository;
 import rs.ac.ni.pmf.quiz.db.model.Category;
 
 public class QuizViewModel extends AndroidViewModel {
-    private final MutableLiveData<List<Category>> _categories = new MutableLiveData<>();
+    private final LiveData<List<Category>> _categories = new MutableLiveData<>();
     private final Set<Category> _selectedCategories = new HashSet<>();
 
-    private CategoriesRepository _categoriesRepository;
+    private final CategoriesRepository _categoriesRepository;
 
     public QuizViewModel(@NonNull Application application) {
         super(application);
@@ -38,6 +39,7 @@ public class QuizViewModel extends AndroidViewModel {
         final String categoryName = category.getName().toUpperCase(Locale.ROOT);
         if (_categories.getValue() != null && _categories.getValue().stream().map(Category::getName).anyMatch(name -> name.toUpperCase(Locale.ROOT).equals(categoryName))) {
             Log.d("LOGTAG", "Category " + categoryName + " already exists");
+            Toast.makeText(getApplication().getApplicationContext(), "Duplicate category: " + categoryName, Toast.LENGTH_SHORT).show();
             return;
         }
 

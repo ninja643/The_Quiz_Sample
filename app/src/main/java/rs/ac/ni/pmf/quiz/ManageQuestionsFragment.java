@@ -24,4 +24,6 @@ public class ManageQuestionsFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_manage_questions, container, false);
     }
+
+    onCrea
 }

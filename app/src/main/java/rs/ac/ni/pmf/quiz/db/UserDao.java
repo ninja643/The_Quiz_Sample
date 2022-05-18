@@ -12,5 +12,5 @@ import rs.ac.ni.pmf.quiz.db.model.UserWithQuestions;
 public interface UserDao {
     @Transaction
     @Query("SELECT * FROM users WHERE username = :username")
-    public List<UserWithQuestions> getQuestionsByUsername(String username);
+    List<UserWithQuestions> getQuestionsByUsername(String username);
 }
